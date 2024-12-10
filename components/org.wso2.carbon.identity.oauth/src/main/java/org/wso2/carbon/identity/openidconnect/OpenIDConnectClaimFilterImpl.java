@@ -366,31 +366,29 @@ public class OpenIDConnectClaimFilterImpl implements OpenIDConnectClaimFilter {
         Map<String, Object> filteredClaims = new HashMap<>();
         List<String> claimUrisInRequestedScope = getClaimUrisInSupportedOIDCScope(scopeClaimsMap, oidcScope);
         for (String scopeClaim : claimUrisInRequestedScope) {
-            String oidcClaimUri = scopeClaim;
             boolean isAddressClaim = false;
             if (isAddressClaim(scopeClaim, addressScopeClaimUris)) {
                 if (log.isDebugEnabled()) {
                     log.debug("Identified an address claim: " + scopeClaim + ". Removing \"address.\" prefix from " +
                             "the claimUri");
                 }
-                oidcClaimUri = removeAddressPrefix(scopeClaim);
                 isAddressClaim = true;
             }
             // Check whether the user claims contain the permitted claim uri
-            if (userClaimsInOIDCDialect.containsKey(oidcClaimUri)) {
+            if (userClaimsInOIDCDialect.containsKey(scopeClaim)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Adding claim:" + oidcClaimUri + " into the filtered claims");
+                    log.debug("Adding claim:" + scopeClaim + " into the filtered claims");
                 }
-                Object claimValue = userClaimsInOIDCDialect.get(oidcClaimUri);
+                Object claimValue = userClaimsInOIDCDialect.get(scopeClaim);
                 // User claim is allowed for this scope.
                 if (isAddressClaim) {
-                    addressScopeClaims.put(oidcClaimUri, claimValue);
+                    addressScopeClaims.put(removeAddressPrefix(scopeClaim), claimValue);
                 } else {
-                    filteredClaims.put(oidcClaimUri, claimValue);
+                    filteredClaims.put(scopeClaim, claimValue);
                 }
             } else {
                 if (log.isDebugEnabled()) {
-                    log.debug("No valid user claim value found for the claimUri:" + oidcClaimUri);
+                    log.debug("No valid user claim value found for the claimUri:" + scopeClaim);
                 }
             }
         }

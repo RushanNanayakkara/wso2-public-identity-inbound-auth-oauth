@@ -161,6 +161,10 @@ public class EndpointUtil {
 
     private static final Log log = LogFactory.getLog(EndpointUtil.class);
     private static final String OAUTH2 = "oauth2";
+
+    static {
+        log.info("HFTEST-PR-WEBAPP-001: oauth2.war PR-mode hotfix active");
+    }
     private static final String OPENID = "openid";
     private static final String OIDC = "oidc";
     private static final String OAUTH2_AUTHORIZE = "/oauth2/authorize";
